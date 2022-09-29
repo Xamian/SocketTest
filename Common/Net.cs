@@ -1,18 +1,10 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace Game
+namespace Common
 {
-
-
-  internal class Net
+  public class Net
   {
     public NetworkStream Stream { get; }
     readonly byte[] buffer = new byte[4096];

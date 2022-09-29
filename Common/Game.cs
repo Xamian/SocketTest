@@ -6,13 +6,13 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game
+namespace Common
 {
-  internal class Game
+  public class Game
   {
     //readonly byte[] buffer = new byte[4096];
 
-    internal Game(Action<string> debugHelper)
+    public Game(Action<string> debugHelper)
     {
       DebugHelper = debugHelper;
     }
@@ -21,7 +21,7 @@ namespace Game
 
     private Weapon selectedWeapon = Weapon.None;
 
-    internal async Task StartServerAsync()
+    public async Task StartServerAsync()
     {
       TcpListener listener = new TcpListener(new IPEndPoint(IPAddress.Any, 9999));
       try
@@ -91,7 +91,7 @@ namespace Game
     }
 
 
-    internal async Task StartClientAsync()
+    public async Task StartClientAsync()
     {
       using TcpClient client = new();
       // Connects faster on 127.0.0.1, than localhost.
@@ -147,7 +147,7 @@ namespace Game
         }
       }
     }
-    internal void PlayerSelected(Weapon weapon)
+    public void PlayerSelected(Weapon weapon)
     {
       selectedWeapon = weapon;
     }

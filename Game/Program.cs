@@ -1,4 +1,4 @@
-namespace Game
+namespace SocketTest
 {
   internal static class Program
   {

@@ -1,6 +1,6 @@
-﻿namespace Game
+﻿namespace Common
 {
-  internal enum Weapon
+  public enum Weapon
   {
     None = -1,
     Stone,

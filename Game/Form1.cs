@@ -2,8 +2,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
+using Common;
 
-namespace Game
+namespace SocketTest
 {
   public partial class Form1 : Form
   {

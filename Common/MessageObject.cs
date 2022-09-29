@@ -1,18 +1,18 @@
-﻿namespace Game
+﻿namespace Common
 {
-  internal enum MessageType
+  public enum MessageType
   {
     Text,
     PlayedTurn,
     Result
   }
-  internal enum Result
+  public enum Result
   {
     Tied,
     HostWins,
     ClientWins,
   }
-  internal class MessageObject
+  public class MessageObject
   {
     public MessageObject() { }
     public MessageObject(string message)
