@@ -1,40 +1,60 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Common;
+using Spectre.Console;
 
-Game game = new(DebugHelper);
-
-static void DebugHelper(string text)
+internal class Program
 {
-  Console.WriteLine(text + Environment.NewLine);
-}
-
-Console.Write("(H)ost or (c)lient? ");
-var k = Console.ReadKey();
-bool isHost = k.KeyChar.ToString().ToUpper() == "H";
-if (isHost)
-{
-  _ = game.StartServerAsync();
-}
-else
-{
-  _ = game.StartClientAsync();
-}
-while (true)
-{
-
-  Weapon playerSelected = Weapon.None;
-  while (playerSelected == Weapon.None)
-  {
-    Console.WriteLine("Choose one:");
-    Console.WriteLine("(S)tone, S(c)issors, (P)aper?");
-    var key = Console.ReadKey().KeyChar.ToString().ToLower();
-    switch (key)
+    private static async Task Main(string[] args)
     {
-      case "s": playerSelected = Weapon.Stone; break;
-      case "c": playerSelected = Weapon.Scissors; break;
-      case "p": playerSelected = Weapon.Paper; break;
+        Game game = new(DebugHelper);
+
+        static void DebugHelper(string text)
+        {
+            if (text == "You lose!" || text == "We lose!")
+            {
+                AnsiConsole.MarkupLine($"[red1]{text}[/]");
+            }
+            else if (text == "You win!" || text == "We win!")
+            {
+                AnsiConsole.MarkupLine($"[green3]{text}[/]");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"{text}");
+            }
+            AnsiConsole.MarkupLine("");
+        }
+        var userMode = AnsiConsole.Prompt<string>(new SelectionPrompt<string>()
+            .Title("Choose Mode:")
+            .HighlightStyle(Style.Parse("orange1"))
+            .AddChoices("Host", "Client"));
+        if (userMode == "Host")
+        {
+            _ = game.StartServerAsync();
+        }
+        else
+        {
+            _ = game.StartClientAsync();
+        }
+        while (true)
+        {
+
+            Weapon playerSelected = Weapon.None;
+            while (playerSelected == Weapon.None)
+            {
+                var userSelect = AnsiConsole.Prompt<string>(new SelectionPrompt<string>()
+                    .Title("Choose one:")
+                    .HighlightStyle(Style.Parse("orange1"))
+                    .AddChoices("Stone", "Scissors", "Paper"));
+                switch (userSelect)
+                {
+                    case "Stone": playerSelected = Weapon.Stone; break;
+                    case "Scissors": playerSelected = Weapon.Scissors; break;
+                    case "Paper": playerSelected = Weapon.Paper; break;
+                }
+            }
+            game.PlayerSelected(playerSelected);
+            var OpponentSelected = await game.GetOpponentSelectionAsync();
+        }
     }
-  }
-  game.PlayerSelected(playerSelected);
-  var OpponentSelected = await game.GetOpponentSelectionAsync();
 }
