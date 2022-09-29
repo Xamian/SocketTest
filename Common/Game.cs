@@ -18,6 +18,7 @@ namespace Common
     }
 
     private Action<string> DebugHelper { get; }
+    public Weapon OpponentSelected { get; private set; } = Weapon.None;
 
     private Weapon selectedWeapon = Weapon.None;
 
@@ -50,11 +51,11 @@ namespace Common
           DebugHelper($"we played {selectedWeapon}");
 
           MessageObject messageFromClient2 = await net.ReceiveAsync();
-          Weapon opponentPlayed = messageFromClient2.SelectedWeapon;
-          DebugHelper($"Opponent played {opponentPlayed}");
+          OpponentSelected = messageFromClient2.SelectedWeapon;
+          DebugHelper($"Opponent played {OpponentSelected}");
 
           bool hostWins = false;
-          if (selectedWeapon == opponentPlayed)
+          if (selectedWeapon == OpponentSelected)
           {
             DebugHelper($"tied, try again.");
             await net.SendAsync(new MessageObject
@@ -67,7 +68,7 @@ namespace Common
           }
           else
           {
-            hostWins = (opponentPlayed - selectedWeapon + 3) % 3 == 1;
+            hostWins = (OpponentSelected - selectedWeapon + 3) % 3 == 1;
             DebugHelper($"You {(hostWins ? "win" : "lose")}!");
             await net.SendAsync(new MessageObject
             {
@@ -132,8 +133,9 @@ namespace Common
 
         // Get result, we are so exited!!!
         var objFromServer = await net.ReceiveAsync();
-        var opponentPlayed = objFromServer.SelectedWeapon;
-        DebugHelper($"Opponent played {opponentPlayed}");
+        
+        OpponentSelected = objFromServer.SelectedWeapon;
+        DebugHelper($"Opponent played {OpponentSelected}");
         if (objFromServer.Result == Result.Tied)
         {
           DebugHelper($"We tied, try again.");
@@ -150,6 +152,15 @@ namespace Common
     public void PlayerSelected(Weapon weapon)
     {
       selectedWeapon = weapon;
+    }
+
+    public async Task<Weapon> GetOpponentSelectionAsync()
+    {
+      while (OpponentSelected == Weapon.None)
+      {
+        await Task.Delay(100);
+      }
+      return OpponentSelected;
     }
   }
 }
