@@ -7,7 +7,7 @@ namespace Common
   public class Net
   {
     public NetworkStream Stream { get; }
-    readonly byte[] buffer = new byte[4096];
+    private readonly byte[] buffer = new byte[4096];
 
     public Net(NetworkStream stream)
     {
